@@ -2,7 +2,7 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { NotifyOptions } from '../styles/NotifyOptions';
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteContact, toggleFavorite } from '../../redux/contactsSlice';
+import { deleteContact, toggleFavorite } from 'redux/operations';
 import { BsFillStarFill, BsFillPersonDashFill } from 'react-icons/bs';
 import { getFilterContacts } from '../../redux/selectors';
 import { ContactsList, ContactItem, Contact, DeleteButton, Icon } from './ContactList.styled.jsx';
@@ -16,8 +16,13 @@ export function ContactList() {
     toast.info(`Contact with name ${name} has been deleted!`, NotifyOptions);
   };
 
-  const handleToggleFavorite = id => {
-    dispatch(toggleFavorite(id));
+  const handleToggleFavorite = (id, isFavorite, name) => {
+    dispatch(toggleFavorite({ id, isFavorite, name }));
+    if (isFavorite) {
+      toast.info(`Contact with name ${name} has been removed from favorites!`, NotifyOptions);
+    } else {
+      toast.info(`Contact with name ${name} has been added to favorites!`, NotifyOptions);
+    }
   };
 
   return (
@@ -28,7 +33,10 @@ export function ContactList() {
             <Contact>
               {name}: {number}
             </Contact>
-            <Icon isFavorite={isFavorite} onClick={() => handleToggleFavorite(id)}>
+            <Icon
+              isFavorite={isFavorite}
+              onClick={() => handleToggleFavorite(id, isFavorite, name)}
+            >
               <BsFillStarFill color={isFavorite ? 'yellow' : 'gray'} />
             </Icon>
             <DeleteButton onClick={() => handleDeleteContact(id, name)}>

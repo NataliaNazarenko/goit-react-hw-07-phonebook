@@ -1,42 +1,46 @@
-import { createSlice, nanoid } from '@reduxjs/toolkit';
+import { createSlice, isAnyOf } from '@reduxjs/toolkit';
+import { fetchContacts, addContact, deleteContact, toggleFavorite } from './operations';
 
-const contactsInitialState = {
-  items: [],
-  isLoading: false,
-  error: null,
-};
+const getActions = type =>
+  isAnyOf(fetchContacts[type], addContact[type], deleteContact[type], toggleFavorite[type]);
 
 const contactsSlice = createSlice({
   name: 'contacts',
-  initialState: contactsInitialState,
-  reducers: {
-    addContact: {
-      reducer: (state, { payload }) => {
-        return [...state, payload];
-      },
-      prepare: data => {
-        return {
-          payload: {
-            id: nanoid(),
-            ...data,
-            isFavorite: false,
-          },
-        };
-      },
-    },
-    deleteContact: (state, { payload }) => {
-      return state.filter(contact => contact.id !== payload);
-    },
-    toggleFavorite: (state, { payload }) => {
-      return state.map(contact => {
-        if (contact.id === payload) {
-          return { ...contact, isFavorite: !contact.isFavorite };
-        }
-        return contact;
-      });
-    },
+  initialState: {
+    items: [],
+    isLoading: false,
+    error: null,
   },
+
+  extraReducers: builder =>
+    builder
+      .addCase(fetchContacts.fulfilled, (state, { payload }) => {
+        state.items = payload;
+      })
+      .addCase(addContact.fulfilled, (state, { payload }) => {
+        state.items.push(payload);
+      })
+      .addCase(deleteContact.fulfilled, (state, { payload }) => {
+        const index = state.items.findIndex(contact => contact.id === payload.id);
+        state.items.splice(index, 1);
+      })
+      .addCase(toggleFavorite.fulfilled, (state, { payload }) => {
+        const contact = state.items.find(contact => contact.id === payload.id);
+        if (contact) {
+          contact.isFavorite = payload.isFavorite;
+        }
+      })
+      .addMatcher(getActions('pending'), state => {
+        state.isLoading = true;
+      })
+      .addMatcher(getActions('rejected'), (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload;
+      })
+      .addMatcher(getActions('fulfilled'), state => {
+        state.isLoading = false;
+        state.error = null;
+      }),
 });
 
-export const { addContact, deleteContact, toggleFavorite } = contactsSlice.actions;
 export const contactsReducer = contactsSlice.reducer;

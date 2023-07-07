@@ -10,3 +10,8 @@ export const Container = styled.div`
   margin-right: auto;
   padding: ${props => props.theme.spacing(7.5)};
 `;
+
+export const Wrapper = styled.div`
+  text-align: center;
+  font-size: ${props => props.theme.fontSizes.medium};
+`;

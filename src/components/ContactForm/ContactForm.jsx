@@ -4,8 +4,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { NotifyOptions } from '../styles/NotifyOptions';
-import { addContact } from '../../redux/contactsSlice';
-import { getFilterContacts } from '../../redux/selectors';
+import { addContact } from 'redux/operations';
+import { getFilterContacts } from 'redux/selectors';
 import { Form, Label, Input, SubmitButton, Wrapper } from './ContactForm.styled';
 
 export function ContactForm() {
