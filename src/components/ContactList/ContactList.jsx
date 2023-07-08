@@ -4,8 +4,15 @@ import { NotifyOptions } from '../styles/NotifyOptions';
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteContact, toggleFavorite } from 'redux/operations';
 import { BsFillStarFill, BsFillPersonDashFill } from 'react-icons/bs';
-import { getFilterContacts } from '../../redux/selectors';
-import { ContactsList, ContactItem, Contact, DeleteButton, Icon } from './ContactList.styled.jsx';
+import { getFilterContacts } from 'redux/selectors';
+import {
+  ContactsList,
+  ContactItem,
+  Contact,
+  DeleteButton,
+  Icon,
+  Wrapper,
+} from './ContactList.styled.jsx';
 
 export function ContactList() {
   const contacts = useSelector(getFilterContacts);
@@ -33,15 +40,17 @@ export function ContactList() {
             <Contact>
               {name}: {number}
             </Contact>
-            <Icon
-              isFavorite={isFavorite}
-              onClick={() => handleToggleFavorite(id, isFavorite, name)}
-            >
-              <BsFillStarFill color={isFavorite ? 'yellow' : 'gray'} />
-            </Icon>
-            <DeleteButton onClick={() => handleDeleteContact(id, name)}>
-              <BsFillPersonDashFill />
-            </DeleteButton>
+            <Wrapper>
+              <Icon
+                isFavorite={isFavorite}
+                onClick={() => handleToggleFavorite(id, isFavorite, name)}
+              >
+                <BsFillStarFill color={isFavorite ? 'yellow' : 'gray'} />
+              </Icon>
+              <DeleteButton onClick={() => handleDeleteContact(id, name)}>
+                <BsFillPersonDashFill />
+              </DeleteButton>
+            </Wrapper>
           </ContactItem>
         );
       })}

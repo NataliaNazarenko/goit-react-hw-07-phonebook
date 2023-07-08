@@ -57,13 +57,26 @@ export const DeleteButton = styled.button`
 `;
 
 export const Icon = styled.div`
+  position: relative;
+  width: 18px;
+  height: 18px;
   cursor: pointer;
+
   & svg {
-    width: 18px;
-    height: 18px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
     fill: ${props => (props.isFavorite ? '#f58e03' : 'none')};
     stroke: ${props => (props.isFavorite ? 'none' : '#4f46e5')};
     stroke-width: 1px;
     pointer-events: none;
   }
+`;
+
+export const Wrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+  width: 25%;
 `;
