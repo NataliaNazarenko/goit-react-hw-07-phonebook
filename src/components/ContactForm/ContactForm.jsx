@@ -48,15 +48,22 @@ export function ContactForm() {
     reset();
   };
 
-  const formSubmitHandler = contact => {
-    const existingContact = contacts.find(cont => cont.name === contact.name);
+  const formSubmitHandler = async contact => {
+    try {
+      const existingContact = contacts.find(cont => cont.name === contact.name);
 
-    if (existingContact) {
-      return toast.error(`Contact with name "${contact.name}" already exists!`, NotifyOptions);
+      if (existingContact) {
+        return toast.error(`Contact with name "${contact.name}" already exists!`, NotifyOptions);
+      }
+
+      await dispatch(addContact(contact)).unwrap();
+      toast.success(
+        `Contact with name ${contact.name} is added to the contact list!`,
+        NotifyOptions
+      );
+    } catch (error) {
+      console.error('Error adding contact:', error);
     }
-
-    dispatch(addContact(contact));
-    toast.success(`Contact with name ${contact.name} is added to the contact list!`, NotifyOptions);
   };
 
   const reset = () => {

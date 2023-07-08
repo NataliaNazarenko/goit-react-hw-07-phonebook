@@ -18,17 +18,25 @@ export function ContactList() {
   const contacts = useSelector(getFilterContacts);
   const dispatch = useDispatch();
 
-  const handleDeleteContact = (id, name) => {
-    dispatch(deleteContact(id));
-    toast.info(`Contact with name ${name} has been deleted!`, NotifyOptions);
+  const handleDeleteContact = async (id, name) => {
+    try {
+      await dispatch(deleteContact(id)).unwrap();
+      toast.info(`Contact with name ${name} has been deleted!`, NotifyOptions);
+    } catch (error) {
+      console.error('Error deleting contact:', error);
+    }
   };
 
-  const handleToggleFavorite = (id, isFavorite, name) => {
-    dispatch(toggleFavorite({ id, isFavorite, name }));
-    if (isFavorite) {
-      toast.info(`Contact with name ${name} has been removed from favorites!`, NotifyOptions);
-    } else {
-      toast.info(`Contact with name ${name} has been added to favorites!`, NotifyOptions);
+  const handleToggleFavorite = async (id, isFavorite, name) => {
+    try {
+      await dispatch(toggleFavorite({ id, isFavorite, name })).unwrap();
+      if (isFavorite) {
+        toast.info(`Contact with name ${name} has been removed from favorites!`, NotifyOptions);
+      } else {
+        toast.info(`Contact with name ${name} has been added to favorites!`, NotifyOptions);
+      }
+    } catch (error) {
+      console.error('Error toggling favorite:', error);
     }
   };
 
